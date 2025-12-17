@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<!--
+   MNEMOSYNE | Website de memórias
+   2025/2026
+   Autoras: Carolina Machado, Mariana Marinha, Maria Sá, Rita Mendes
+   UC: Projeto 4
+   Curso: Design de Comunicação, 3º Ano
+   Faculdade de Belas Artes da Universidade do Porto
+-->
+
+<html lang="pt-PT">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mnemosyne</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="assets/imagens/favicon.png" />
+  
+  <audio id="bg-music" src="assets/musica/fallendown.mp3" autoplay loop></audio>
+  <!-- Google Fonts: Montserrat para tipografia principal -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Stylesheet principal -->
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <!-- Canvas de fundo: contém SVG com círculos/memórias -->
+  <div class="canvas">
+    <!-- SVG principal com viewBox fixo, preserva aspeto no centro -->
+    <svg id="circles-svg" viewBox="0 0 1728 1117" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <!-- Filtro de blur suave para criar efeito glow nas esferas -->
+        <!-- Filtro com região expandida para evitar cortes nas bordas -->
+        <filter id="soft-glow" x="-40%" y="-40%" width="180%" height="180%" filterUnits="objectBoundingBox">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="45" result="blur" />
+        </filter>
+        
+        <!-- === GRADIENTES RADIAIS PARA AS ESFERAS DE MEMÓRIA === -->
+        <!-- Cada gradiente é único com transições de cor complexas -->
+                <!-- Filtro de destaque para esferas selecionadas: aumenta brilho e saturação -->
+                <filter id="highlight" x="-20%" y="-20%" width="140%" height="140%" filterUnits="objectBoundingBox">
+                  <feColorMatrix type="saturate" values="1.8" />
+                  <feComponentTransfer>
+                    <feFuncR type="linear" slope="1.25" />
+                    <feFuncG type="linear" slope="1.25" />
+                    <feFuncB type="linear" slope="1.25" />
+                    <feFuncA type="linear" slope="1.0" />
+                  </feComponentTransfer>
+                  <feGaussianBlur stdDeviation="6" result="glow" />
+                  <feMerge>
+                    <feMergeNode in="SourceGraphic" />
+                    <feMergeNode in="glow" />
+                  </feMerge>
+                </filter>
+        
+        <!-- Bola 1: Azul → Amarelo → Laranja → Vermelho → Magenta (mais brilho e stops) -->
+        <radialGradient id="grad-1" cx="50%" cy="50%">
+          <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:1" />
+          <stop offset="6%" style="stop-color:#B8E8FF;stop-opacity:0.98" />
+          <stop offset="13%" style="stop-color:#4EC9FF;stop-opacity:0.96" />
+          <stop offset="20%" style="stop-color:#6FEAFF;stop-opacity:0.93" />
+          <stop offset="28%" style="stop-color:#FFE85C;stop-opacity:0.91" />
+          <stop offset="36%" style="stop-color:#FF9C4A;stop-opacity:0.87" />
+          <stop offset="45%" style="stop-color:#F52A2A;stop-opacity:0.8" />
+          <stop offset="56%" style="stop-color:#8B1A1A;stop-opacity:0.65" />
+          <stop offset="70%" style="stop-color:#C7358A;stop-opacity:0.38" />
+          <stop offset="85%" style="stop-color:#C7358A;stop-opacity:0.18" />
+          <stop offset="100%" style="stop-color:#000000;stop-opacity:0" />
+        </radialGradient>
+        <!-- Bola 2: Ciano claro → Turquesa → Azul profundo → Verde água (mais brilho e stops) -->
+        <radialGradient id="grad-2" cx="50%" cy="50%">
+          <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:1" />
+          <stop offset="7%" style="stop-color:#D4F4FF;stop-opacity:0.98" />
+          <stop offset="15%" style="stop-color:#68EBFF;stop-opacity:0.95" />
+          <stop offset="24%" style="stop-color:#2BB8E8;stop-opacity:0.91" />
+          <stop offset="34%" style="stop-color:#1A5C7A;stop-opacity:0.85" />
+          <stop offset="46%" style="stop-color:#5CE39D;stop-opacity:0.7" />
+          <stop offset="60%" style="stop-color:#1F5C3A;stop-opacity:0.45" />
+          <stop offset="80%" style="stop-color:#1F5C3A;stop-opacity:0.22" />
+          <stop offset="100%" style="stop-color:#000000;stop-opacity:0" />
+        </radialGradient>
+        <!-- Bola 3: Rosa → Roxo → Púrpura escuro → Azul claro (mais brilho e stops) -->
+        <radialGradient id="grad-3" cx="50%" cy="50%">
+          <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:1" />
+          <stop offset="8%" style="stop-color:#FFC4F0;stop-opacity:0.98" />
+          <stop offset="17%" style="stop-color:#E67FFF;stop-opacity:0.95" />
+          <stop offset="27%" style="stop-color:#9C4AEB;stop-opacity:0.91" />
+          <stop offset="38%" style="stop-color:#4A1A70;stop-opacity:0.85" />
+          <stop offset="52%" style="stop-color:#A8D8FF;stop-opacity:0.7" />
+          <stop offset="70%" style="stop-color:#5CB3FF;stop-opacity:0.45" />
+          <stop offset="90%" style="stop-color:#5CB3FF;stop-opacity:0.22" />
+          <stop offset="100%" style="stop-color:#000000;stop-opacity:0" />
+        </radialGradient>
+        <!-- Bola 4: Branco → Rosa → Magenta → Vermelho → Laranja (mais brilho e stops) -->
+        <radialGradient id="grad-4" cx="50%" cy="50%">
+          <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:1" />
+          <stop offset="7%" style="stop-color:#FFF5FC;stop-opacity:0.98" />
+          <stop offset="15%" style="stop-color:#FFB8EC;stop-opacity:0.95" />
+          <stop offset="24%" style="stop-color:#FF6AD4;stop-opacity:0.91" />
+          <stop offset="34%" style="stop-color:#C7358A;stop-opacity:0.85" />
+          <stop offset="46%" style="stop-color:#F52A2A;stop-opacity:0.7" />
+          <stop offset="60%" style="stop-color:#FF9C4A;stop-opacity:0.45" />
+          <stop offset="80%" style="stop-color:#FF9C4A;stop-opacity:0.22" />
+          <stop offset="100%" style="stop-color:#000000;stop-opacity:0" />
+        </radialGradient>
+        <!-- Bola 5: Amarelo limão → Verde → Verde escuro → Azul (mais brilho e stops) -->
+        <radialGradient id="grad-5" cx="50%" cy="50%">
+          <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:1" />
+          <stop offset="8%" style="stop-color:#F0FFB8;stop-opacity:0.98" />
+          <stop offset="17%" style="stop-color:#C8FF5C;stop-opacity:0.95" />
+          <stop offset="27%" style="stop-color:#84E345;stop-opacity:0.91" />
+          <stop offset="38%" style="stop-color:#3D6B1F;stop-opacity:0.85" />
+          <stop offset="52%" style="stop-color:#A8D8FF;stop-opacity:0.7" />
+          <stop offset="70%" style="stop-color:#5CB3FF;stop-opacity:0.45" />
+          <stop offset="90%" style="stop-color:#5CB3FF;stop-opacity:0.22" />
+          <stop offset="100%" style="stop-color:#000000;stop-opacity:0" />
+        </radialGradient>
+        <!-- Bola 6: Laranja → Azul → Roxo → Verde (mais brilho e stops) -->
+        <radialGradient id="grad-6" cx="50%" cy="50%">
+          <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:1" />
+          <stop offset="7%" style="stop-color:#FFD699;stop-opacity:0.98" />
+          <stop offset="15%" style="stop-color:#99CCFF;stop-opacity:0.95" />
+          <stop offset="24%" style="stop-color:#5C8FFF;stop-opacity:0.91" />
+          <stop offset="34%" style="stop-color:#2A3D6B;stop-opacity:0.85" />
+          <stop offset="46%" style="stop-color:#84E345;stop-opacity:0.7" />
+          <stop offset="60%" style="stop-color:#3D6B1F;stop-opacity:0.45" />
+          <stop offset="80%" style="stop-color:#3D6B1F;stop-opacity:0.22" />
+          <stop offset="100%" style="stop-color:#000000;stop-opacity:0" />
+        </radialGradient>
+        <!-- Bola 7: Dourado → Laranja → Vermelho → Magenta (mais brilho e stops) -->
+        <radialGradient id="grad-7" cx="50%" cy="50%">
+          <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:1" />
+          <stop offset="7%" style="stop-color:#FFF9D6;stop-opacity:0.98" />
+          <stop offset="15%" style="stop-color:#FFD84A;stop-opacity:0.95" />
+          <stop offset="24%" style="stop-color:#FF9F3D;stop-opacity:0.91" />
+          <stop offset="34%" style="stop-color:#B85A1A;stop-opacity:0.85" />
+          <stop offset="46%" style="stop-color:#F52A2A;stop-opacity:0.7" />
+          <stop offset="60%" style="stop-color:#C7358A;stop-opacity:0.45" />
+          <stop offset="80%" style="stop-color:#C7358A;stop-opacity:0.22" />
+          <stop offset="100%" style="stop-color:#000000;stop-opacity:0" />
+        </radialGradient>
+        <!-- Bola 8: Amarelo brilhante → Laranja suave → Azul → Verde (mais brilho e stops) -->
+        <radialGradient id="grad-8" cx="50%" cy="50%">
+          <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:1" />
+          <stop offset="7%" style="stop-color:#FFFADB;stop-opacity:0.98" />
+          <stop offset="15%" style="stop-color:#FFF176;stop-opacity:0.95" />
+          <stop offset="24%" style="stop-color:#FFB84A;stop-opacity:0.91" />
+          <stop offset="34%" style="stop-color:#B87A00;stop-opacity:0.85" />
+          <stop offset="46%" style="stop-color:#A8D8FF;stop-opacity:0.7" />
+          <stop offset="60%" style="stop-color:#84E345;stop-opacity:0.45" />
+          <stop offset="80%" style="stop-color:#84E345;stop-opacity:0.22" />
+          <stop offset="100%" style="stop-color:#000000;stop-opacity:0" />
+        </radialGradient>
+        <!-- Bola 9: Verde limão → Oliva → Castanho → Azul escuro (mais brilho e stops) -->
+        <radialGradient id="grad-9" cx="50%" cy="50%">
+          <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:1" />
+          <stop offset="7%" style="stop-color:#DBFF99;stop-opacity:0.98" />
+          <stop offset="15%" style="stop-color:#A8D65C;stop-opacity:0.95" />
+          <stop offset="24%" style="stop-color:#6B9B2A;stop-opacity:0.91" />
+          <stop offset="34%" style="stop-color:#3D5617;stop-opacity:0.85" />
+          <stop offset="46%" style="stop-color:#5C7FD4;stop-opacity:0.7" />
+          <stop offset="60%" style="stop-color:#2A3D6B;stop-opacity:0.45" />
+          <stop offset="80%" style="stop-color:#2A3D6B;stop-opacity:0.22" />
+          <stop offset="100%" style="stop-color:#000000;stop-opacity:0" />
+        </radialGradient>
+        <!-- Bola 10: Azul céu → Lavanda → Azul escuro → Rosa (mais brilho e stops) -->
+        <radialGradient id="grad-10" cx="50%" cy="50%">
+          <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:1" />
+          <stop offset="7%" style="stop-color:#C4E0FF;stop-opacity:0.98" />
+          <stop offset="15%" style="stop-color:#9FBAFF;stop-opacity:0.95" />
+          <stop offset="24%" style="stop-color:#5C7FD4;stop-opacity:0.91" />
+          <stop offset="34%" style="stop-color:#2A3D6B;stop-opacity:0.85" />
+          <stop offset="46%" style="stop-color:#FFC4F0;stop-opacity:0.7" />
+          <stop offset="60%" style="stop-color:#E67FFF;stop-opacity:0.45" />
+          <stop offset="80%" style="stop-color:#E67FFF;stop-opacity:0.22" />
+          <stop offset="100%" style="stop-color:#000000;stop-opacity:0" />
+        </radialGradient>
+        <!-- Bola 11: Coral → Vermelho → Bordô → Amarelo (mais brilho e stops) -->
+        <radialGradient id="grad-11" cx="50%" cy="50%">
+          <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:1" />
+          <stop offset="7%" style="stop-color:#FFA89E;stop-opacity:0.98" />
+          <stop offset="15%" style="stop-color:#FF5C4A;stop-opacity:0.95" />
+          <stop offset="24%" style="stop-color:#D92A1A;stop-opacity:0.91" />
+          <stop offset="34%" style="stop-color:#6B1A13;stop-opacity:0.85" />
+          <stop offset="46%" style="stop-color:#FFE85C;stop-opacity:0.7" />
+          <stop offset="60%" style="stop-color:#FFD84A;stop-opacity:0.45" />
+          <stop offset="80%" style="stop-color:#FFD84A;stop-opacity:0.22" />
+          <stop offset="100%" style="stop-color:#000000;stop-opacity:0" />
+        </radialGradient>
+        <!-- Bola 12: Verde menta → Verde água → Musgo → Azul claro (mais brilho e stops) -->
+        <radialGradient id="grad-12" cx="50%" cy="50%">
+          <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:1" />
+          <stop offset="7%" style="stop-color:#B8FFDB;stop-opacity:0.98" />
+          <stop offset="15%" style="stop-color:#5CE39D;stop-opacity:0.95" />
+          <stop offset="24%" style="stop-color:#35A86B;stop-opacity:0.91" />
+          <stop offset="34%" style="stop-color:#1F5C3A;stop-opacity:0.85" />
+          <stop offset="46%" style="stop-color:#A8D8FF;stop-opacity:0.7" />
+          <stop offset="60%" style="stop-color:#5CB3FF;stop-opacity:0.45" />
+          <stop offset="80%" style="stop-color:#5CB3FF;stop-opacity:0.22" />
+          <stop offset="100%" style="stop-color:#000000;stop-opacity:0" />
+        </radialGradient>
+      </defs>
+      
+      <!-- Fundo preto sólido do canvas -->
+      <rect width="1728" height="1117" fill="black" />
+      
+      <!-- Grupo de círculos com filtro glow aplicado -->
+      <!-- As esferas são criadas dinamicamente pelo formulário Firebase -->
+      <g filter="url(#soft-glow)" id="memory-circles-container">
+        <!-- Círculos de memória aparecem aqui quando submetidos via formulário -->
+      </g>
+    </svg>
+  </div>
+
+  <!-- Texto de display da memória: aparece ao clicar numa esfera -->
+  <div id="memory-display" class="memory-text"></div>
+
+  <!-- Botão footer "MNEMOSYNE": abre menu principal -->
+  <div id="footer-trigger" class="footer-trigger" role="button" aria-haspopup="true" aria-controls="menu-overlay" aria-label="Abrir menu">MNEMOSYNE</div>
+
+  <!-- Mobile hint: mensagem "ABRA NO DESKTOP", só aparece em mobile -->
+  <!-- Auto-hide via script abaixo após 3.5s + fade 1.6s -->
+  <div id="mobile-hint" class="mobile-hint" aria-live="polite">ABRA NO DESKTOP PARA MELHOR EXPERIÊNCIA</div>
+
+  <!-- === MENU OVERLAY: painel central com informação === -->
+  <div id="menu-overlay" class="menu-overlay" aria-hidden="true">
+    <!-- Painel com glass morphism effect -->
+    <div class="menu-panel" role="dialog" aria-modal="true" aria-labelledby="menu-title">
+      <!-- Container scrollável do conteúdo -->
+      <div class="menu-content" role="document">
+        <!-- Título do menu -->
+        <h2 id="menu-title" class="menu-title">SOBRE MNEMOSYNE</h2>
+        
+        <!-- Texto principal: explicação do projeto -->
+        <p class="menu-text" id="menu-text" aria-describedby="menu-title">Mnemosyne nasceu de uma inquietação comum: a efemeridade da memória humana e o medo coletivo do esquecimento. É sobre aquilo que só existe enquanto alguém o recorda, presenças frágeis que vivem na oscilação constante entre permanecer e desaparecer.<br><br>
+Sob o olhar atento de Mnemosyne, a personificação divina da memória na mitologia grega antiga que inspirou o nome e conceito deste projeto, criámos um arquivo comunitário, anónimo e temporário de memórias, que é alimentado única e exclusivamente através da participação do observador. Criado no intuito de ser experiênciado numa sala escura e íntima, após de responder ao questionário disponível através do respectivo código QR, o observador poderá observar a sua memória surgir no espaço da projeção na forma de uma aura colorida, que vai existir no mesmo espaço onírico que as respostas de observadores anteriores por quanto tempo a sua relevância para o observador a permitir.<br><br>
+Este é um projeto realizado por quatro estudantes de Design de Comunicação do 3º ano da Faculdade de Belas Artes da Universidade do Porto em resposta ao projeto final de UC Projeto 4. Fascinadas pela recordação e o esquecimento inevitável, brotou uma experiência que, não só testou as nossas capacidades técnicas, como também exercitou a ligação conceptual que temos com a nossa arte.</p>
+      </div>
+      <!-- Setas de navegação entre páginas (V symbols) -->
+      <button class="menu-arrow menu-arrow-prev" id="menu-arrow-prev" aria-label="Voltar ao conteúdo anterior">∧</button>
+      <button class="menu-arrow" id="menu-arrow" aria-label="Abrir página Sobre Nós">∨</button>
+    </div>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  
+  <!-- Firebase configuração -->
+  <script src="assets/js/firebase-config.js"></script>
+  <script src="assets/js/memory-manager.js"></script>
+  
+  <!-- JavaScript principal: partição das esferas, interações, menu, navegação -->
+  <script src="assets/js/main.js">
+  </script>
+  
+  <!-- Script inline: auto-hide do mobile hint -->
+  <script>
+    // Esconde mobile hint após carregar página, com tempo para ler
+    window.addEventListener('load', function() {
+      const hint = document.getElementById('mobile-hint');
+      if (!hint) return;
+      // Mantém visível tempo suficiente para ler, depois fade e remove
+      const visibleDuration = 3500; // ms que a mensagem fica totalmente visível
+      const fadeDuration = 1600;    // ms de fade-out antes de remover (match CSS)
+      setTimeout(() => {
+        hint.classList.add('hide'); // Inicia fade
+        setTimeout(() => hint.remove(), fadeDuration); // Remove do DOM
+      }, visibleDuration);
+    });
+  </script>
+</body>
+</html>

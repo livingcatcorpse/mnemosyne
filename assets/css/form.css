@@ -1,0 +1,199 @@
+/* Scroll invisível para todo o formulário */
+body, textarea, .form-content, .form-step, .form-wrapper, .memory-text, .step-content {
+  scrollbar-width: none; /* Firefox */
+}
+body::-webkit-scrollbar,
+textarea::-webkit-scrollbar,
+.form-content::-webkit-scrollbar,
+.form-step::-webkit-scrollbar,
+.form-wrapper::-webkit-scrollbar,
+.memory-text::-webkit-scrollbar,
+.step-content::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+/* Legenda de limite de caracteres */
+.char-limit-hint {
+  color: #fff;
+  font-size: 11px;
+  margin-top: 6px;
+  margin-bottom: 2px;
+  text-align: left;
+  font-weight: 400;
+  opacity: 0.7;
+  letter-spacing: 0.01em;
+}
+/* ========================================
+   MNEMOSYNE | CSS (estilos principais do formulário)
+   2025/2026
+   Autoras: Carolina Machado, Mariana Marinha, Maria Sá, Rita Mendes
+   UC: Projeto 4
+   Curso: Design de Comunicação, 3º Ano
+   Faculdade de Belas Artes da Universidade do Porto
+   ========================================
+*/
+
+/* Mobile-first styles for the form page */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+[hidden] { display: none !important; }
+body {
+  font-family: 'Montserrat', sans-serif;
+  background: linear-gradient(135deg, #0f0f14 0%, #1a1a24 100%);
+  color: #e6e6f2;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  position: relative;
+  overflow: hidden;
+}
+.decor-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+.decor-canvas svg { width: 100%; height: 100%; display: block; }
+.decor-canvas .memory-circle { cursor: pointer; transition: opacity 0.5s ease; mix-blend-mode: screen; }
+.hero-title {
+  position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  z-index: 2; font-weight: 700; letter-spacing: 0.14em; text-align: center;
+  opacity: 0; animation: heroAppear 800ms 100ms cubic-bezier(.18,.95,.4,1) forwards;
+}
+.hero-title h1 { font-size: clamp(22px, 7vw, 34px); font-weight: 600;
+  background: linear-gradient(90deg, rgba(255,255,255,0.92), rgba(255,255,255,0.6));
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+}
+@keyframes heroAppear { from { opacity:0; transform: translate(-50%, -55%) scale(0.98);} to { opacity:1; transform: translate(-50%, -50%) scale(1);} }
+.intro-screen { position: fixed; inset: 0; display: grid; place-items: center; grid-template-rows: 1fr auto auto 1fr; z-index: 2; }
+.hero-subtitle { text-align: center; margin-top: 8px; color: rgba(255,255,255,0.75); font-size: clamp(12px, 4.6vw, 16px); letter-spacing: 0.1em; font-weight: 300; }
+.intro-continue { position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%);
+  color: rgba(255,255,255,0.6); font-size: clamp(11px, 3.4vw, 13px);
+  cursor: pointer; transition: color .25s ease; letter-spacing: 0.08em;
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  z-index: 10;
+}
+.intro-continue p { margin: 0; }
+.intro-continue p .btn-main,
+.intro-continue p .btn-sub {
+  display: block;
+  text-align: center;
+}
+.intro-continue p .btn-main {
+  font-weight: 600;
+}
+.intro-continue p .btn-sub {
+  font-weight: 400;
+  margin-top: 2px;
+  opacity: 1;
+}
+.intro-continue .arrow-down { opacity: 0.7; transition: opacity .25s ease, transform .25s ease; }
+.intro-continue:hover { color: rgba(255,255,255,0.85); }
+.intro-continue:hover .arrow-down { opacity: 1; transform: translateY(2px); }
+/* Step continue button - mesmo estilo mas position fixed */
+.step-continue { position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%);
+  color: rgba(255,255,255,0.6); font-size: clamp(11px, 3.4vw, 13px);
+  cursor: pointer; transition: color .25s ease; letter-spacing: 0.08em;
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  z-index: 10;
+}
+.step-continue p { margin: 0; }
+.step-continue p .btn-main,
+.step-continue p .btn-sub {
+  display: block;
+  text-align: center;
+}
+.step-continue p .btn-main {
+  font-weight: 600;
+}
+.step-continue p .btn-sub {
+  font-weight: 400;
+  margin-top: 2px;
+  opacity: 1;
+}
+.step-continue .arrow-down { opacity: 0.7; transition: opacity .25s ease, transform .25s ease; }
+.step-continue:hover { color: rgba(255,255,255,0.85); }
+.step-continue:hover .arrow-down { opacity: 1; transform: translateY(2px); }
+/* Text screen */
+.text-screen { position: fixed; inset: 0; display: grid; place-items: center; z-index: 2; padding: 24px; }
+.text-content { max-width: 220px; text-align: center; }
+.text-content p { 
+  color: rgba(255,255,255,0.85); 
+  font-size: 18px; 
+  line-height: 128.7%; 
+  margin-bottom: 28px; 
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.text-content p:last-child { margin-bottom: 0; }
+/* Fade transitions for switching views */
+.fade-in { animation: fadeIn 420ms ease forwards; }
+.fade-out { animation: fadeOut 420ms ease forwards; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+.form-container {
+  width: 100%;
+  max-width: 320px;
+  background: transparent;
+  backdrop-filter: none;
+  border: none;
+  border-radius: 0;
+  padding: 24px 18px;
+  box-shadow: none;
+  z-index: 1;
+}
+h1 { font-size: clamp(20px, 6vw, 28px); margin-bottom: 8px; background: linear-gradient(135deg, #fff, #d4d4e0); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; text-align: center; }
+.subtitle { text-align: center; color: rgba(255,255,255,0.65); margin-bottom: 18px; font-size: clamp(11px, 3.4vw, 13px); letter-spacing: 0.06em; }
+.form-question { font-size: 18px; font-weight: 600; text-align: center; color: rgba(255,255,255,0.9); margin-bottom: 24px; line-height: 128.7%; max-width: 260px; margin-left: auto; margin-right: auto; }
+.form-step { opacity: 0; animation: fadeIn 420ms ease forwards; }
+.importance-selector { display: flex; justify-content: center; align-items: flex-start; gap: 28px; margin: 32px 0; }
+.importance-option { display: flex; flex-direction: column; align-items: center; gap: 8px; position: relative; }
+.importance-option input[type="radio"] { position: absolute; opacity: 0; pointer-events: none; }
+.importance-option .circle-label { width: 32px; height: 32px; border: 2px solid rgba(255,255,255,0.6); border-radius: 50%; cursor: pointer; transition: all 0.3s ease; }
+.importance-option input[type="radio"]:checked + .circle-label { background: rgba(255,255,255,0.9); border-color: rgba(255,255,255,0.9); }
+.importance-option .circle-label:hover { border-color: rgba(255,255,255,0.85); }
+.importance-label { font-size: 13px; color: rgba(255,255,255,0.7); font-weight: 600; }
+.emotion-circles {
+  display: flex; flex-direction: column; align-items: center; gap: 28px; margin: 32px 0;
+  /* Igualar largura total às 5 opções do passo de importância: 5 círculos + 4 gaps (32px, 28px) */
+  --emotion-circle-size: 32px;
+  --emotion-circle-gap: 28px;
+  --emotion-row-width: calc(5 * var(--emotion-circle-size) + 4 * var(--emotion-circle-gap));
+}
+.emotion-row {
+  display: flex; width: var(--emotion-row-width);
+}
+/* 1ª e 3ª filas (3 itens): extremos + centro */
+.emotion-row:nth-child(1), .emotion-row:nth-child(3) { justify-content: space-between; gap: 0; }
+/* 2ª fila (2 itens): posicionadas entre as de cima/baixo */
+.emotion-row:nth-child(2) { justify-content: space-around; gap: 0; }
+/* Reutiliza o mesmo estilo de círculos outline do passo de importância */
+.importance-option, .emotion-option { display: flex; flex-direction: column; align-items: center; gap: 8px; position: relative; }
+.importance-option input[type="radio"], .emotion-option input[type="radio"] { position: absolute; opacity: 0; pointer-events: none; }
+.importance-option .circle-label, .emotion-option .circle-label { width: 32px; height: 32px; border: 2px solid rgba(255,255,255,0.6); border-radius: 50%; cursor: pointer; transition: all 0.3s ease; }
+/* Emoções: permite ajustar tamanho independentemente da importância */
+.emotion-option .circle-label { width: var(--emotion-circle-size, 32px); height: var(--emotion-circle-size, 32px); }
+.importance-option input[type="radio"]:checked + .circle-label, .emotion-option input[type="radio"]:checked + .circle-label { background: rgba(255,255,255,0.9); border-color: rgba(255,255,255,0.9); }
+.importance-option .circle-label:hover, .emotion-option .circle-label:hover { border-color: rgba(255,255,255,0.85); }
+.emotion-caption { font-size: 13px; color: rgba(255,255,255,0.7); font-weight: 600; text-transform: none; }
+.form-group { margin-bottom: 18px; }
+label { display:block; margin-bottom: 8px; font-weight:600; font-size: clamp(12px, 3.6vw, 14px); color: rgba(255,255,255,0.85); }
+textarea, select {
+  width: 100%; padding: 14px 12px; background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; color: #e6e6f2;
+  font-family: 'Montserrat', sans-serif; font-size: clamp(13px, 3.8vw, 15px); transition: all 0.3s ease;
+}
+textarea { min-height: 96px; resize: vertical; }
+textarea:focus, select:focus { outline: none; border-color: rgba(255,255,255,0.35); background: rgba(255,255,255,0.08); }
+button[type="submit"], .btn-next {
+  width: 100%; padding: 16px; background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.08));
+  border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; color: #fff;
+  font-family: 'Montserrat', sans-serif; font-size: clamp(14px, 4vw, 16px); font-weight: 600;
+  cursor: pointer; transition: all 0.3s ease; margin-top: 16px;
+}
+button[type="submit"]:hover, .btn-next:hover { background: linear-gradient(135deg, rgba(255,255,255,0.22), rgba(255,255,255,0.12)); transform: translateY(-1px); }
+.back-link { display:block; text-align:center; margin-top:16px; color: rgba(255,255,255,0.5); text-decoration:none; font-size: clamp(12px, 3.6vw, 14px); transition: color 0.3s ease; }
+.back-link:hover { color: rgba(255,255,255,0.75); }
+@media (min-width: 768px) {
+  .form-container { padding: 32px 28px; border-radius: 24px; max-width: 320px; }
+  .subtitle { margin-bottom: 28px; }
+  .form-group { margin-bottom: 22px; }
+  textarea { min-height: 140px; }
+  button[type="submit"] { padding: 18px; }
+}
